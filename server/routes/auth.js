@@ -11,7 +11,7 @@ const loginLimiter = rateLimit({
     message: "Too many login attempts from this IP, please try again in 15 minutes."
 });
 
-/* 👤 User Login Route (with Rate Limiter applied) 👤 */
+/* 👤 User Login Route (with Rate Limiter) 👤 */
 router.post("/login", loginLimiter, login);
 
 export default router;
