@@ -1,4 +1,6 @@
 import jwt from "jsonwebtoken";
+import rateLimit from 'express-rate-limit';
+
 
 export const verifyToken = async (req, res, next) => {
   try {
@@ -8,9 +10,9 @@ export const verifyToken = async (req, res, next) => {
       return res.status(401).json({ error: "Unauthorized: Token Missing" });
     }
 
-    const bearerTokenPattern = /^Bearer\s[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+$/;
+    const authTokenPattern = /^Bearer\s[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+$/;
 
-    if (!bearerTokenPattern.test(token)) {
+    if (!authTokenPattern.test(token)) {
       return res.status(401).json({ error: "Invalid Token Format" });
     }
 
