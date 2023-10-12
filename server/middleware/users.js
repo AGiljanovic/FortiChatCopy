@@ -2,12 +2,12 @@ import Joi from 'joi';
 
 /* 🎯 Input Validation Schemas 🎯 */
 const userIdSchema = Joi.object({
-  id: Joi.string().required(),
+  id: Joi.string().alphanum().min(24).max(24).required(),
 }).options({ abortEarly: false });
 
 const friendIdSchema = Joi.object({
-  id: Joi.string().required(),
-  friendId: Joi.string().required(),
+  id: Joi.string().alphanum().min(24).max(24).required(),
+  friendId: Joi.string().alphanum().min(24).max(24).required(),
 }).options({ abortEarly: false });
 
 /* 🧪 Input Validation 🧪  */

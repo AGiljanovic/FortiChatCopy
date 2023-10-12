@@ -16,10 +16,10 @@ const registrationSchema = joi.object({
     occupation: joi.string().optional()   
 });
 
-const loginSchema = joi.object({
-    email: joi.string().email().required(),
-    password: joi.string().required()
-});
+const loginSchema = Joi.object({
+    username: Joi.string().alphanum().min(3).max(30).required(),
+    password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
+  }).options({ abortEarly: false });  
 
 /* ✍🏼 Register New User ✍🏼 */
 export const register = async (req, res) => {

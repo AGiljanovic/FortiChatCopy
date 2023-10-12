@@ -15,9 +15,6 @@ const router = express.Router();
 /* 👷‍♀️ Middlewares 👷‍♀️ */
 router.use(morgan('combined'));
 
-/* TO DO */
-// Log file in production using winston
-
 router.use(apiRateLimiter);
 
 /* 👓 Read 👓 */
