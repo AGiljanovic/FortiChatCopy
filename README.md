@@ -1,2 +1,2 @@
 # FortiChat
-Social Media App 
+Social Media App - work in progress.
