@@ -10,6 +10,7 @@ import multer from "multer";
 import path from "path";
 
 import authRoutes from "./routes/auth.js";
+import userRoutes from "./routes/users.js";
 import { register } from "./controllers/auth.js";
 
 

@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import rateLimit from 'express-rate-limit';
 
 
 export const verifyToken = async (req, res, next) => {
