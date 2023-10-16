@@ -8,7 +8,7 @@ import {
   getUserFriends,
   addRemoveFriend,
 } from "../controllers/users.js";
-import { apiRateLimiter, friendListRateLimiter } from '../middleware/rateLimiter.js'; // Import from your centralized rateLimiter.js file
+import { apiRateLimiter, friendListRateLimiter } from '../middleware/rateLimiter.js'; 
 
 const router = express.Router();
 
@@ -19,7 +19,7 @@ router.use(apiRateLimiter);
 
 /* 👓 Read 👓 */
 router.get("/:id", verifyToken, validate(userIdSchema, 'params'), getUser);
-router.get("/:id/friends", verifyToken, friendListRateLimiter, validate(userIdSchema, 'params'), getUserFriends); // Use the centralized friendList rate limiter 
+router.get("/:id/friends", verifyToken, friendListRateLimiter, validate(userIdSchema, 'params'), getUserFriends);
 
 /* 🔄 Update 🔄 */
 router.patch("/:id/:friendId", verifyToken, validate(friendIdSchema, 'params'), addRemoveFriend);
