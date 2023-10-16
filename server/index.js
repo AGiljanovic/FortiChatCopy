@@ -11,6 +11,7 @@ import path from "path";
 
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
+import userPosts from "./routes/posts.js";
 import { register } from "./controllers/auth.js";
 
 
