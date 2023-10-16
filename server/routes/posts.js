@@ -1,9 +1,16 @@
 import express from "express";
+import morgan from 'morgan';
 import Joi from 'joi';
+
 import { getFeedPosts, getUserPosts, likePost } from "../controllers/posts.js";
 import { verifyToken } from "../middleware/auth.js";
+import { apiRateLimiter } from '../middleware/rateLimiter.js';
 
 const router = express.Router();
+
+/* 👷‍♀️ Middlewares 👷‍♀️ */
+router.use(morgan('combined'));
+router.use(apiRateLimiter);
 
 const userIdSchema = Joi.string().required();
 const postIdSchema = Joi.string().required();
