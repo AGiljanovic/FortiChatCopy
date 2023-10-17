@@ -1,5 +1,6 @@
 import express from "express";
 import morgan from 'morgan';
+import multer from 'multer';
 import Joi from 'joi';
 
 import { getFeedPosts, getUserPosts, likePost } from "../controllers/posts.js";
@@ -59,14 +60,5 @@ router.patch("/:id/like", verifyToken, async (req, res, next) => {
     if (error) return res.status(400).json({ error: error.details[0].message });
     return next();
 }, likePost);
-
-/* 📌 Upload post with image 📌 */
-router.post("/create", verifyToken, upload.single('picturePath'), async (req, res, next) => {
-    if (!req.file) {
-      return res.status(400).json({ error: 'Image upload failed' });
-    }
-    req.body.picturePath = req.file.path;
-    return next();
-  }, createPost);
 
 export default router;
