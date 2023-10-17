@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import User from "../models/User.js";
+import User from "../models/user.js";
 
 
 /* 👓 Read: Get User Info 👓 */
@@ -37,7 +37,7 @@ export const getUserFriends = async (req, res) => {
   }
 };
 
-/* ➕🔄➖ Add or Remove Friend ➕🔄➖ */
+/* ➕🔄➖ Update: Add or Remove Friend ➕🔄➖ */
 export const addRemoveFriend = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();

@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import joi from 'joi';
 import jwt from "jsonwebtoken";
 
-import User from "models/user.js";
+import User from "../models/user.js";
 
 /* 📜 Validation Schemas 📜 */
 const registrationSchema = joi.object({
