@@ -12,6 +12,28 @@ const router = express.Router();
 router.use(morgan('combined'));
 router.use(apiRateLimiter);
 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/')
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + '-' + file.originalname)
+    }
+  });
+  
+  const fileFilter = (req, file, cb) => {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type'), false);
+    }
+  };
+
+const upload = multer({
+    storage: storage,
+    fileFilter: fileFilter
+});
+
 const userIdSchema = Joi.string().required();
 const postIdSchema = Joi.string().required();
 const likePostSchema = Joi.object({
@@ -37,5 +59,14 @@ router.patch("/:id/like", verifyToken, async (req, res, next) => {
     if (error) return res.status(400).json({ error: error.details[0].message });
     return next();
 }, likePost);
+
+/* 📌 Upload post with image 📌 */
+router.post("/create", verifyToken, upload.single('picturePath'), async (req, res, next) => {
+    if (!req.file) {
+      return res.status(400).json({ error: 'Image upload failed' });
+    }
+    req.body.picturePath = req.file.path;
+    return next();
+  }, createPost);
 
 export default router;
