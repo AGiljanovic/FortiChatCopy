@@ -1,7 +1,7 @@
 import express from "express";
 
 import { login } from "../controllers/auth.js";
-import { loginLimiter } from "../middleware/rateLimiters.js";
+import { loginLimiter } from "../middleware/rateLimiter.js";
 
 
 const router = express.Router();
