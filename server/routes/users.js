@@ -53,7 +53,7 @@ router.patch("/:id/:friendId", verifyToken, async (req, res, next) => {
 }, addRemoveFriend);
 
 router.use((error, req, res, next) => {
-    console.error(error.stack);
+    console.error(error.stack); // Reminder: Remove once I am done -> Security risk
     res.status(500).json({ error: "An internal error occurred." });
 });
 

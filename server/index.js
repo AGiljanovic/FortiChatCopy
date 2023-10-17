@@ -28,7 +28,7 @@ app.use(helmet.crossOriginResourcePolicy({ policy: "same-origin" }));
 app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "15mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "15mb", extended: true }));
-app.use(cors());
+app.use(cors()); // Do not forget -> Add my domain later
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 
