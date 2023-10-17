@@ -5,21 +5,21 @@ const postSchema = mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'User', // Referencing the User model
+      ref: 'User',
     },
     firstName: {
       type: String,
       required: true,
       trim: true,
       maxlength: 50,
-      match: [/^[a-zA-Z0-9 ]+$/, 'First name can only contain letters.'],
+      match: [/^\p{L}+[\p{L} ]*$/gu, 'Name can only contain letters.'],
     },
     lastName: {
       type: String,
       required: true,
       trim: true,
       maxlength: 50,
-      match: [/^[a-zA-Z0-9 ]+$/, 'Last name can only contain letters.'],
+      match: [/^\p{L}+[\p{L} ]*$/gu, 'Name can only contain letters.'],
     },
     location: {
       type: String,
@@ -32,23 +32,28 @@ const postSchema = mongoose.Schema(
       maxlength: 500,
     },
     picturePath: {
-      type: String,
-      trim: true,
-      maxlength: 500,
-    },
+        type: String,
+        trim: true,
+        maxlength: 500,
+        match: [/^[a-zA-Z0-9\-_.\/]+$/, 'Picture path contains invalid characters.'],
+      },      
     userPicturePath: {
-      type: String,
-      trim: true,
-      maxlength: 500,
+        type: String,
+        trim: true,
+        maxlength: 500,
+        match: [/^[a-zA-Z0-9\-_.\/]+$/, 'User picture path contains invalid characters.'],
     },
     likes: {
       type: Map,
       of: Boolean,
     },
-    comments: {
-      type: Array,
-      default: [],
-    },
+    comments: [
+      {
+        commentText: { type: String, trim: true, maxlength: 500 },
+        commenterId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        createdAt: { type: Date, default: Date.now },
+      },
+    ],
   },
   { timestamps: true }
 );
