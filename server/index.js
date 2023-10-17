@@ -2,7 +2,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import fileURLToPath from "url";
+import { fileURLToPath } from "url";
 import helmet from "helmet";
 import mongoose from "mongoose";
 import morgan from "morgan";
@@ -11,8 +11,10 @@ import path from "path";
 
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
-import userPosts from "./routes/posts.js";
+import postRoutes from "./routes/posts.js";
 import { register } from "./controllers/auth.js";
+import { createPost } from "./controllers/posts.js";
+import { verifyToken } from "./middleware/auth.js";
 
 
 /* 🛠️ Configs 🛠️ */
