@@ -1,7 +1,7 @@
 import express from "express";
 import morgan from 'morgan';
 import multer from 'multer';
-import Joi from 'joi';
+import joi from 'joi';
 
 import { getFeedPosts, getUserPosts, likePost } from "../controllers/posts.js";
 import { verifyToken } from "../middleware/auth.js";
@@ -35,10 +35,10 @@ const upload = multer({
     fileFilter: fileFilter
 });
 
-const userIdSchema = Joi.string().required();
-const postIdSchema = Joi.string().required();
-const likePostSchema = Joi.object({
-    like: Joi.boolean().required(),
+const userIdSchema = joi.string().required();
+const postIdSchema = joi.string().required();
+const likePostSchema = joi.object({
+    like: joi.boolean().required(),
 });
 
 /* 👓 Read 👓 */
