@@ -7,16 +7,18 @@ const router = express.Router();
 
 router.use(loginLimiter);
 
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
 const loginSchema = Joi.object({
     email: Joi.string().email().required(),
-    password: Joi.string().required()
+    password: Joi.string().pattern(passwordRegex).required()
 });
 
 const validate = (schema) => {
     return (req, res, next) => {
         const { error } = schema.validate(req.body);
         if (error) {
-            return res.status(400).json({ error: "Invalid input data. Please check and try again." });
+            return res.status(400).json({ error: "Invalid email or password." });
         }
         next();
     };
