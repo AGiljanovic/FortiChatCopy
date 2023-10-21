@@ -1,17 +1,15 @@
+import sanitize from 'mongo-sanitize';
+import joi from 'joi';
+
 import Post from "../models/post.js";
 import User from "../models/user.js";
-import joi from 'joi';
-import morgan from 'morgan';
 
-// Define your validation schema
+/* 📜 Validation Schemas 📜 */
 const postSchema = joi.object({
     userId: joi.string().required(),
     description: joi.string().max(500),
     picturePath: joi.string().uri()
 });
-
-// For logging - You can adjust the format and options as required
-app.use(morgan('combined'));
 
 /* 🖊 Create 🖊 */
 export const createPost = async (req, res) => {
@@ -22,14 +20,16 @@ export const createPost = async (req, res) => {
         }
 
         const { userId, description, picturePath } = req.body;
-        const user = await User.findById(userId);
+
+        const sanitizedUserId = sanitize(userId);
+        const user = await User.findById(sanitizedUserId);
 
         if (!user) {
             return res.status(400).json({ message: "User not found." });
         }
 
         const postData = {
-            userId,
+            userId: sanitizedUserId,
             description,
             likes: {},
             comments: [],
@@ -60,7 +60,7 @@ export const getFeedPosts = async (req, res) => {
 
 export const getUserPosts = async (req, res) => {
     try {
-        const { userId } = req.params;
+        const userId = sanitize(req.params.userId);
         const posts = await Post.find({ userId });
         res.status(200).json(posts);
     } catch (err) {
@@ -71,8 +71,8 @@ export const getUserPosts = async (req, res) => {
 /* 🔄 Update 🔄 */
 export const likePost = async (req, res) => {
     try {
-        const { id } = req.params;
-        const { userId } = req.body;
+        const id = sanitize(req.params.id);
+        const userId = sanitize(req.body.userId);
 
         const post = await Post.findById(id);
 
