@@ -46,6 +46,7 @@ router.get("/", verifyToken, getFeedPosts);
 
 router.get("/:userId/posts", verifyToken, async (req, res, next) => {
     const { error } = userIdSchema.validate(req.params.userId);
+
     if (error) return res.status(400).json({ error: error.details[0].message });
     return next();
 }, getUserPosts);

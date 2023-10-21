@@ -39,7 +39,7 @@ export const register = async (req, res) => {
             occupation,
           } = req.body;
 
-        /*  Check for existing user */
+        /* ⏱️ Check for Existing User ⏱️ */
         const existingUser = await User.findOne({ email: email });
         if (existingUser) {
             return res.status(400).json({ error: "Email already registered." });
@@ -87,7 +87,7 @@ export const login = async (req, res) => {
         /* 🔍 Find User by Email 🔍 */
         const user = await User.findOne({ email: email });
         if (!user || !await bcrypt.compare(password, user.password)) {
-            return res.status(400).json({ msg: "Invalid email or password." });
+            return res.status(400).json({ msg: "Invalid  password." });
         }
 
         /* 🎟 Generate JWT with Expiry 🎟 */
