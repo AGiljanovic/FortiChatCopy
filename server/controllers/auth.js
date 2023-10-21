@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import joi from 'joi';
 import jwt from "jsonwebtoken";
+import sanitize from 'mongo-sanitize';
 
 import User from "../models/user.js";
 
@@ -40,9 +41,10 @@ export const register = async (req, res) => {
           } = req.body;
 
         /* ⏱️ Check for Existing User ⏱️ */
-        const existingUser = await User.findOne({ email: email });
+        const sanitizedEmail = sanitize(email);
+        const existingUser = await User.findOne({ email: sanitizedEmail });
         if (existingUser) {
-            return res.status(400).json({ error: "Email already registered." });
+            return res.status(400).json({ error: "Registration failed. Please check your details again." });
         }
 
         /* 🔐 Password Hashing 🔐 */
@@ -85,7 +87,8 @@ export const login = async (req, res) => {
         const { email, password } = req.body;
 
         /* 🔍 Find User by Email 🔍 */
-        const user = await User.findOne({ email: email });
+        const sanitizedEmail = sanitize(email);
+        const user = await User.findOne({ email: sanitizedEmail });
         if (!user || !await bcrypt.compare(password, user.password)) {
             return res.status(400).json({ msg: "Invalid  password." });
         }
