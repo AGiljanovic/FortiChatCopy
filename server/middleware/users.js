@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import sanitize from 'mongo-sanitize';
 
 /* 🎯 Input Validation Schemas 🎯 */
 const userIdSchema = Joi.object({
@@ -17,6 +18,9 @@ function validate(schema, property = 'body') {
     if (error) {
       return res.status(400).json({ error: error.details.map(detail => detail.message).join(', ') });
     }
+    
+    req[property] = sanitize(req[property]);
+    
     next();
   };
 }
