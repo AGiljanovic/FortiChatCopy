@@ -1,12 +1,14 @@
 import mongoose from "mongoose";
-import User from "../models/user.js";
+import sanitize from 'mongo-sanitize';
 
+import User from "../models/user.js";
 
 /* 👓 Read: Get User Info 👓 */
 export const getUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findById(id);
+    const sanitizedId = sanitize(id);
+    const user = await User.findById(sanitizedId);
     res.status(200).json(user);
   } catch (err) {
     console.error(err);
@@ -18,10 +20,11 @@ export const getUser = async (req, res) => {
 export const getUserFriends = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findById(id);
+    const sanitizedId = sanitize(id);
+    const user = await User.findById(sanitizedId);
 
     const friends = await Promise.all(
-      user.friends.map((id) => User.findById(id))
+      user.friends.map((friendId) => User.findById(friendId))
     );
     
     const formattedFriends = friends.map(
@@ -44,20 +47,22 @@ export const addRemoveFriend = async (req, res) => {
   
   try {
     const { id, friendId } = req.params;
+    const sanitizedId = sanitize(id);
+    const sanitizedFriendId = sanitize(friendId);
     
-    if (id === friendId) throw new Error();
+    if (sanitizedId === sanitizedFriendId) throw new Error("User ID and friend ID cannot be the same.");
     
-    const user = await User.findById(id);
-    const friend = await User.findById(friendId);
+    const user = await User.findById(sanitizedId);
+    const friend = await User.findById(sanitizedFriendId);
     
     if (!user || !friend) throw new Error();
     
-    if (user.friends.includes(friendId)) {
-      user.friends = user.friends.filter((id) => id !== friendId);
-      friend.friends = friend.friends.filter((id) => id !== id);
+    if (user.friends.includes(sanitizedFriendId)) {
+      user.friends = user.friends.filter((fid) => fid !== sanitizedFriendId);
+      friend.friends = friend.friends.filter((fid) => fid !== sanitizedId);
     } else {
-      user.friends.push(friendId);
-      friend.friends.push(id);
+      user.friends.push(sanitizedFriendId);
+      friend.friends.push(sanitizedId);
     }
     
     await user.save({ session });
