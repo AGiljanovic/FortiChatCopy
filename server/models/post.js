@@ -47,13 +47,10 @@ const postSchema = mongoose.Schema(
       type: Map,
       of: Boolean,
     },
-    comments: [
-      {
-        commentText: { type: String, trim: true, maxlength: 500 },
-        commenterId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-        createdAt: { type: Date, default: Date.now },
-      },
-    ],
+    comments: {
+      type: Array,
+      default: [],
+    },
   },
   { timestamps: true }
 );
