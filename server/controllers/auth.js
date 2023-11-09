@@ -1,106 +1,81 @@
 import bcrypt from "bcrypt";
-import joi from 'joi';
 import jwt from "jsonwebtoken";
-import sanitize from 'mongo-sanitize';
-
 import User from "../models/user.js";
+import joi from 'joi';
+import sanitize from "mongo-sanitize";
 
-/* 📜 Validation Schemas 📜 */
-const registrationSchema = joi.object({
-    firstName: joi.string().min(2).required(),
-    lastName: joi.string().min(2).required(),
-    email: joi.string().email().required(),
-    password: joi.string().min(8).required(),
-    picturePath: joi.string().uri().optional(),
-    friends: joi.array().items(joi.string()),
-    location: joi.string().optional(),
-    occupation: joi.string().optional()   
+/* 🖨️ Joi Validation Schemas 🖨️ */
+const registerSchema = joi.object({
+  firstName: joi.string().min(2).max(50).required(),
+  lastName: joi.string().min(2).max(50).required(),
+  email: joi.string().email().max(50).required(),
+  password: joi.string().min(5).required(),
+  picturePath: joi.string().allow('', null),
+  friends: joi.array().items(joi.string().alphanum()),
+  location: joi.string().optional(),
+  occupation: joi.string().optional(),
 });
 
 const loginSchema = joi.object({
-    username: joi.string().alphanum().min(3).max(30).required(),
-    password: joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
-  }).options({ abortEarly: false });  
+  email: joi.string().email().required(),
+  password: joi.string().required(),
+});
 
-/* ✍🏼 Register New User ✍🏼 */
+/* 🧍‍♀️Register User 🧍‍♀️ */
 export const register = async (req, res) => {
-    try {
-        /* 📜 Input Validation 📜 */
-        const { error } = registrationSchema.validate(req.body);
-        if (error) return res.status(400).json({ error: error.details[0].message });
-
-        const {
-            firstName,
-            lastName,
-            email,
-            password,
-            picturePath,
-            friends,
-            location,
-            occupation,
-          } = req.body;
-
-        /* ⏱️ Check for Existing User ⏱️ */
-        const sanitizedEmail = sanitize(email);
-        const existingUser = await User.findOne({ email: sanitizedEmail });
-        if (existingUser) {
-            return res.status(400).json({ error: "Registration failed. Please check your details again." });
-        }
-
-        /* 🔐 Password Hashing 🔐 */
-        const salt = await bcrypt.genSalt();
-        const passwordHash = await bcrypt.hash(password, salt);
-
-        const newUser = new User({
-            firstName,
-            lastName,
-            email,
-            password: passwordHash,
-            picturePath,
-            friends,
-            location,
-            occupation,
-            viewedProfile: Math.floor(Math.random() * 10000),
-            impressions: Math.floor(Math.random() * 10000),
-          });
-
-        /* 💾 Save User & Prepare Response Data 💾 */
-        const savedUser = await newUser.save();
-        const { _id, firstName: fName, lastName: lName } = savedUser;
-
-        /* 📤 Send Minimal User Data 📤 */
-        res.status(201).json({ _id, firstName: fName, lastName: lName });
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "An error occurred. Please try again later." });
+  try {
+    const sanitizedBody = sanitize(req.body);
+    const { error, value } = registerSchema.validate(sanitizedBody);
+    if (error) {
+      return res.status(400).json({ error: "Invalid registration data provided." });
     }
+
+    value.email = value.email.toLowerCase();
+    const passwordHash = await bcrypt.hash(value.password, 12);
+
+    const newUser = new User({
+      firstName,
+      lastName,
+      email: value.email,
+      password: passwordHash,
+      picturePath,
+      friends,
+      location,
+      occupation,
+      viewedProfile: Math.floor(Math.random() * 10000),
+      impressions: Math.floor(Math.random() * 10000),
+    });
+    const savedUser = await newUser.save();
+    res.status(201).json(savedUser);
+  } catch (err) {
+    res.status(500).json({ error: "An error occurred while processing your request." });
+  }
 };
 
-/* 👤 Login User 👤 */
+/* ⏰ Logging In ⏰ */
 export const login = async (req, res) => {
-    try {
-        /* 📜 Input Validation 📜 */
-        const { error } = loginSchema.validate(req.body);
-        if (error) return res.status(400).json({ error: error.details[0].message });
-
-        const { email, password } = req.body;
-
-        /* 🔍 Find User by Email 🔍 */
-        const sanitizedEmail = sanitize(email);
-        const user = await User.findOne({ email: sanitizedEmail });
-        if (!user || !await bcrypt.compare(password, user.password)) {
-            return res.status(400).json({ msg: "Invalid  password." });
-        }
-
-        /* 🎟 Generate JWT with Expiry 🎟 */
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-        /* 📤 Send Minimal User Data 📤 */
-        res.status(200).json({ token, user: { _id: user._id, firstName: user.firstName, lastName: user.lastName } });
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "An error occurred. Please try again later." });
+  try {
+    const sanitizedBody = sanitize(req.body);
+    const { error, value } = loginSchema.validate(sanitizedBody);
+    if (error) {
+      return res.status(400).json({ error: "Invalid login data provided." });
     }
+    value.email = value.email.toLowerCase();
+
+    const user = await User.findOne({ email: value.email }).select('+password');
+    if (!user) {
+      return res.status(401).json({ error: "Invalid login credentials." });
+    }
+
+    const isMatch = await bcrypt.compare(value.password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: "Invalid login credentials." });
+    }
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    delete user.password;
+    res.status(200).json({ token, user });
+  } catch (err) {
+    res.status(500).json({ error: "An error occurred while processing your request." });
+  }
 };
