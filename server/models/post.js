@@ -33,9 +33,7 @@ const postSchema = mongoose.Schema(
     },
     picturePath: {
         type: String,
-        trim: true,
-        maxlength: 500,
-        match: [/^[a-zA-Z0-9\-_.\/]+$/, 'Picture path contains invalid characters.'],
+        default: "",
       },      
     userPicturePath: {
         type: String,
