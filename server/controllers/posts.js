@@ -1,101 +1,110 @@
-import sanitize from 'mongo-sanitize';
-import joi from 'joi';
-
+import mongoose from "mongoose";
 import Post from "../models/post.js";
 import User from "../models/user.js";
+import sanitize from 'mongo-sanitize';
 
-/* 📜 Validation Schemas 📜 */
-const postSchema = joi.object({
-    userId: joi.string().required(),
-    description: joi.string().max(500),
-    picturePath: joi.string().uri()
-});
+/* ✅ Checker for Valid MongoDB ObjectId ✅ */
+const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id);
 
-/* 🖊 Create 🖊 */
+/* 🪓 Strip HTML Tags From a String 🪓 */
+function sanitizeString(str) {
+  return str.replace(/<\/?[^>]+(>|$)/g, "");
+}
+
+/* 🛠️ Create 🛠️ */
 export const createPost = async (req, res) => {
-    try {
-        const result = postSchema.validate(req.body);
-        if (result.error) {
-            return res.status(400).json({ message: "Invalid input." });
-        }
+  try {
+    const sanitizedBody = sanitize(req.body);
+    let { userId, description, picturePath } = sanitizedBody;
 
-        const { userId, description, picturePath } = req.body;
-
-        const sanitizedUserId = sanitize(userId);
-        const user = await User.findById(sanitizedUserId);
-
-        if (!user) {
-            return res.status(400).json({ message: "User not found." });
-        }
-
-        const postData = {
-            userId: sanitizedUserId,
-            description,
-            likes: {},
-            comments: [],
-        };
-
-        if (picturePath) {
-            postData.picturePath = picturePath;
-        }
-
-        const newPost = new Post(postData);
-        await newPost.save();
-
-        res.status(201).json(newPost);
-    } catch (err) {
-        res.status(500).json({ message: "Unable to create the post at this time. Please try again later." });
+    if (!isValidObjectId(userId)) {
+      return res.status(400).json({ message: "Invalid data provided." });
     }
+
+    if (description) {
+      description = sanitizeString(description);
+      if (description.length > 500) {
+        return res.status(400).json({ message: "Description is too long." });
+      }
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "Resource not found." });
+    }
+
+    const newPost = new Post({
+      userId: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      location: user.location,
+      description,
+      userPicturePath: user.picturePath,
+      picturePath,
+      likes: {},
+      comments: [],
+    });
+
+    await newPost.save();
+    res.status(201).json(newPost);
+  } catch (err) {
+    console.error(`Error creating post: ${err.message}`);
+    res.status(500).json({ message: "An error occurred while creating the post." });
+  }
 };
 
 /* 👓 Read 👓 */
 export const getFeedPosts = async (req, res) => {
-    try {
-        const posts = await Post.find();
-        res.status(200).json(posts);
-    } catch (err) {
-        res.status(500).json({ message: "Unable to fetch the posts at this time. Please try again later." });
-    }
+  try {
+    const posts = await Post.find().limit(100);
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to retrieve posts." });
+  }
 };
 
 export const getUserPosts = async (req, res) => {
-    try {
-        const userId = sanitize(req.params.userId);
-        const posts = await Post.find({ userId });
-        res.status(200).json(posts);
-    } catch (err) {
-        res.status(500).json({ message: "Unable to fetch the user posts at this time. Please try again later." });
+  try {
+    const sanitizedUserId = sanitize(req.params.userId);
+    
+    if (!isValidObjectId(sanitizedUserId)) {
+      return res.status(400).json({ message: "Invalid data provided." });
     }
+
+    const posts = await Post.find({ userId: sanitizedUserId });
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to retrieve user's posts." });
+  }
 };
 
-/* 🔄 Update 🔄 */
+/* 🔁 Update 🔁 */
 export const likePost = async (req, res) => {
-    try {
-        const id = sanitize(req.params.id);
-        const userId = sanitize(req.body.userId);
+  try {
+    const sanitizedId = sanitize(req.params.id);
+    const sanitizedUserId = sanitize(req.body.userId);
 
-        const post = await Post.findById(id);
-
-        if (!post) {
-            return res.status(404).json({ message: "Post not found." });
-        }
-
-        const isLiked = post.likes.get(userId);
-
-        if (isLiked) {
-            post.likes.delete(userId);
-        } else {
-            post.likes.set(userId, true);
-        }
-
-        const updatedPost = await Post.findByIdAndUpdate(
-            id,
-            { likes: post.likes },
-            { new: true }
-        );
-
-        res.status(200).json(updatedPost);
-    } catch (err) {
-        res.status(500).json({ message: "Unable to process your request at this time. Please try again later." });
+    if (!isValidObjectId(sanitizedId) || !isValidObjectId(sanitizedUserId)) {
+      return res.status(400).json({ message: "Invalid data provided." });
     }
+
+    const post = await Post.findById(sanitizedId);
+    if (!post) {
+      return res.status(404).json({ message: "Resource not found." });
+    }
+
+    post.likes = post.likes || new Map();
+    const isLiked = post.likes.get(sanitizedUserId);
+
+    if (isLiked) {
+      post.likes.delete(sanitizedUserId);
+    } else {
+      post.likes.set(sanitizedUserId, true);
+    }
+
+    const updatedPost = await Post.findByIdAndUpdate(sanitizedId, { likes: post.likes }, { new: true });
+    res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to update post." });
+  }
 };
