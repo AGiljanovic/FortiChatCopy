@@ -15,6 +15,9 @@ import postRoutes from "./routes/posts.js";
 import { register } from "./controllers/auth.js";
 import { createPost } from "./controllers/posts.js";
 import { verifyToken } from "./middleware/auth.js";
+import { apiRateLimiter } from "./middleware/rateLimiter.js";
+import { validateRegistrationData } from "./middleware/validation.js";
+import { validatePostCreation } from "./middleware/validation.js";
 // import User from "./models/user.js";
 // import Post from "./models/post.js";
 // import { users, posts } from "./data/mockData.js";
@@ -36,18 +39,6 @@ app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 
 /* 📂 File Storage 📂 */
-const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png|gif/;
-  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-  const mimetype = allowedTypes.test(file.mimetype);
-
-  if (mimetype && extname) {
-      return cb(null, true);
-  } else {
-      cb(new Error('Error: Images Only!'));
-  }
-};
-
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "public/assets");
@@ -56,18 +47,11 @@ const storage = multer.diskStorage({
     cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname);
   },
 });
-
-const upload = multer({ 
-  storage,
-  limits: {
-      fileSize: 1024 * 1024 * 5, // 5MB limit
-  },
-  fileFilter: fileFilter,
-});
+const upload = multer({ storage });
 
 /* 📁 File Upload Routes 📁 */
-app.post("/auth/register", upload.single("picture"), register);
-app.post("/posts", verifyToken, upload.single("picture"), createPost);
+app.post("/auth/register", upload.single("picture"), apiRateLimiter, validateRegistrationData, register);
+app.post("/posts", verifyToken, upload.single("picture"), validatePostCreation,createPost);
 
 /* 🛣️ General Routes 🛣️ */
 app.use("/auth", authRoutes);
