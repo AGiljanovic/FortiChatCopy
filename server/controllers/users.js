@@ -81,11 +81,13 @@ export const addRemoveFriend = async (req, res) => {
 
     if (!isValidObjectId(sanitizedId) || !isValidObjectId(sanitizedFriendId)) {
       await session.abortTransaction();
+      logger.warn(`Add/Remove Friend: Invalid ID format for user ${sanitizedId} or friend ${sanitizedFriendId}`);
       return res.status(400).json({ message: "Invalid user ID or friend ID format." });
     }
 
     if (sanitizedId === sanitizedFriendId) {
       await session.abortTransaction();
+      logger.warn(`Add/Remove Friend: Attempt to befriend self for user ${sanitizedId}`);
       return res.status(400).json({ message: "Users cannot befriend themselves." });
     }
 
@@ -94,6 +96,7 @@ export const addRemoveFriend = async (req, res) => {
 
     if (!user || !friend) {
       await session.abortTransaction();
+      logger.warn(`Add/Remove Friend: User or friend not found for user ${sanitizedId} or friend ${sanitizedFriendId}`);
       return res.status(404).json({ message: "User or friend not found." });
     }
 
@@ -103,9 +106,11 @@ export const addRemoveFriend = async (req, res) => {
     if (userIndex > -1) {
       user.friends.splice(userIndex, 1);
       friend.friends.splice(friendIndex, 1);
+      logger.info(`Friend removed: User ${sanitizedId} removed friend ${sanitizedFriendId}`);
     } else {
       user.friends.push(sanitizedFriendId);
       friend.friends.push(sanitizedId);
+      logger.info(`Friend added: User ${sanitizedId} added friend ${sanitizedFriendId}`);
     }
 
     await user.save({ session });
@@ -113,9 +118,6 @@ export const addRemoveFriend = async (req, res) => {
 
     await session.commitTransaction();
     session.endSession();
-
-    // Log Success of Addition or Removal of Friend 
-    console.log(`User ${sanitizedId} updated friends list: ${sanitizedFriendId} ${user.friends.includes(sanitizedFriendId) ? 'added' : 'removed'}.`);
 
     const updatedFriends = await Promise.all(
       user.friends.map(friendId => User.findById(friendId).select('_id firstName lastName occupation location picturePath'))
