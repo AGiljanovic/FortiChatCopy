@@ -1,4 +1,6 @@
 import joi from 'joi';
+import logger from "../logger";
+
 
 const registerValidationSchema = joi.object({
   firstName: joi.string().min(2).max(50).required(),
@@ -34,7 +36,8 @@ const postCreationSchema = joi.object({
 export const validateRegistrationData = (req, res, next) => {
   const { error } = registerValidationSchema.validate(req.body);
   if (error) {
-    return res.status(400).json({ error: error.details.map(x => x.message).join(', ') });
+    logger.warn(`Registration validation failed: ${req.ip}`);
+    return res.status(400).json({ error: "Invalid registration data." });
   }
   req.body.email = req.body.email.toLowerCase();
   next();
@@ -43,7 +46,8 @@ export const validateRegistrationData = (req, res, next) => {
 export const validateLoginData = (req, res, next) => {
   const { error } = loginValidationSchema.validate(req.body);
   if (error) {
-    return res.status(400).json({ error: error.details.map(x => x.message).join(', ') });
+    logger.warn(`Login validation failed: ${req.ip}`);
+    return res.status(400).json({ error: "Invalid login data." });
   }
   req.body.email = req.body.email.toLowerCase();
   next();
@@ -51,18 +55,18 @@ export const validateLoginData = (req, res, next) => {
 
 export const validateUserParams = (req, res, next) => {
   const { error } = userParamsSchema.validate(req.params);
-
   if (error) {
-    return res.status(400).json({ error: error.details.map(detail => detail.message).join(', ') });
+    logger.warn(`User parameters validation failed: ${req.ip}`);
+    return res.status(400).json({ error: "Invalid parameters." });
   }
-
   next();
 };
 
 export const validatePostCreation = (req, res, next) => {
   const { error } = postCreationSchema.validate(req.body);
   if (error) {
-    return res.status(400).json({ error: error.details.map(x => x.message).join(', ') });
+    logger.warn(`Post creation validation failed: ${req.ip}`);
+    return res.status(400).json({ error: "Invalid post data." });
   }
   next();
 };
