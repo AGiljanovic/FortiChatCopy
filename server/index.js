@@ -12,6 +12,7 @@ import path from "path";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import postRoutes from "./routes/posts.js";
+import logger from "./utils/logger.js";
 import { register } from "./controllers/auth.js";
 import { createPost } from "./controllers/posts.js";
 import { verifyToken } from "./middleware/auth.js";
@@ -71,12 +72,13 @@ app.use("/posts", postRoutes);
 /* 💥 Error Handling 💥 */
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
-      res.status(400).send('File upload error.');
+    res.status(400).send('File upload error.');
+    logger.error('Multer error: ' + err.message);
   } else if (err) {
-      console.error(err.stack);
-      res.status(500).send('Internal Server Error!');
+    logger.error(err.stack);
+    res.status(500).send('Internal Server Error!');
   } else {
-      next();
+    next();
   }
 });
 
@@ -88,10 +90,10 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    app.listen(PORT, () => console.log(`Connected To Server On Port: ${PORT}`));
+    app.listen(PORT, () => logger.info(`Server Port: ${PORT}`));
 
     /* ➕ Add Data 1 Time ➕ */
     // User.insertMany(users);
     // Post.insertMany(posts);
   })
-  .catch((error) => console.log(`${error} failed to connect`));
+  .catch((error) => logger.error(`${error} did not connect`));
