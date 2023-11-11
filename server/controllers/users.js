@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import User from "../models/user.js";
 import sanitize from 'mongo-sanitize';
+import logger from "../logger";
 
 /* ✅ Checker for Valid MongoDB ObjectId ✅ */
 const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id);
@@ -10,15 +11,19 @@ export const getUser = async (req, res) => {
   try {
     const sanitizedId = sanitize(req.params.id);
     if (!isValidObjectId(sanitizedId)) {
+      logger.warn(`Get User: Invalid user ID format ${sanitizedId}`);
       return res.status(400).json({ message: "Invalid user ID format." });
     }
 
     const user = await User.findById(sanitizedId).select('-password -otherSensitiveField');
     if (!user) {
+      logger.warn(`Get User: User not found for ID ${sanitizedId}`);
       return res.status(404).json({ message: "User not found." });
     }
+    logger.info(`User details retrieved for ID ${sanitizedId}`);
     res.status(200).json(user);
   } catch (err) {
+    logger.error(`Get User Error: ${err.message}`);
     res.status(500).json({ message: "Internal server error." });
   }
 };
@@ -28,11 +33,13 @@ export const getUserFriends = async (req, res) => {
   try {
     const sanitizedId = sanitize(req.params.id);
     if (!isValidObjectId(sanitizedId)) {
+      logger.warn(`Get User Friends: Invalid user ID format ${sanitizedId}`);
       return res.status(400).json({ message: "Invalid user ID format." });
     }
 
     const user = await User.findById(sanitizedId);
     if (!user) {
+      logger.warn(`Get User Friends: User not found for ID ${sanitizedId}`);
       return res.status(404).json({ message: "User not found." });
     }
 
@@ -54,8 +61,10 @@ export const getUserFriends = async (req, res) => {
       picturePath: friend.picturePath
     }));
 
+    logger.info(`User friends details retrieved for ID ${sanitizedId}`);
     res.status(200).json(formattedFriends);
   } catch (err) {
+    logger.error(`Get User Friends Error: ${err.message}`);
     res.status(500).json({ message: "Internal server error." });
   }
 };
@@ -122,6 +131,7 @@ export const addRemoveFriend = async (req, res) => {
 
     res.status(200).json(formattedFriends);
   } catch (err) {
+    logger.error(`Add/Remove Friend Error: ${err.message}`);
     await session.abortTransaction();
     session.endSession();
     if (err.kind === 'ObjectId') {

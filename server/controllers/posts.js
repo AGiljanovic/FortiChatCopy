@@ -18,18 +18,21 @@ export const createPost = async (req, res) => {
     let { userId, description, picturePath } = sanitizedBody;
 
     if (!isValidObjectId(userId)) {
+      logger.warn("Post creation: Invalid userID provided");
       return res.status(400).json({ message: "Invalid data provided." });
     }
 
     if (description) {
       description = sanitizeString(description);
       if (description.length > 500) {
+        logger.warn("Post creation: Description too long");
         return res.status(400).json({ message: "Description is too long." });
       }
     }
 
     const user = await User.findById(userId);
     if (!user) {
+      logger.warn(`Post creation: User not found for ID ${userId}`);
       return res.status(404).json({ message: "Resource not found." });
     }
 
@@ -46,9 +49,10 @@ export const createPost = async (req, res) => {
     });
 
     await newPost.save();
+    logger.info(`New post created by User ID: ${userId}`);
     res.status(201).json(newPost);
   } catch (err) {
-    console.error(`Error creating post: ${err.message}`);
+    logger.error(`Error creating post: ${err.message}`);
     res.status(500).json({ message: "An error occurred while creating the post." });
   }
 };
@@ -57,8 +61,10 @@ export const createPost = async (req, res) => {
 export const getFeedPosts = async (req, res) => {
   try {
     const posts = await Post.find().limit(100);
+    logger.info("Retrieved feed posts");
     res.status(200).json(posts);
   } catch (err) {
+    logger.error("Error retrieving feed posts: " + err.message);
     res.status(500).json({ message: "Failed to retrieve posts." });
   }
 };
@@ -68,12 +74,14 @@ export const getUserPosts = async (req, res) => {
     const sanitizedUserId = sanitize(req.params.userId);
     
     if (!isValidObjectId(sanitizedUserId)) {
+      logger.warn("User post retrieval: Invalid userID provided");
       return res.status(400).json({ message: "Invalid data provided." });
     }
 
     const posts = await Post.find({ userId: sanitizedUserId });
     res.status(200).json(posts);
   } catch (err) {
+    logger.error(`Error retrieving user's posts: ${err.message}`);
     res.status(500).json({ message: "Failed to retrieve user's posts." });
   }
 };
@@ -85,11 +93,13 @@ export const likePost = async (req, res) => {
     const sanitizedUserId = sanitize(req.body.userId);
 
     if (!isValidObjectId(sanitizedId) || !isValidObjectId(sanitizedUserId)) {
+      logger.warn("Like post: Invalid postID or userID provided");
       return res.status(400).json({ message: "Invalid data provided." });
     }
 
     const post = await Post.findById(sanitizedId);
     if (!post) {
+      logger.warn(`Like post: Post not found for ID ${sanitizedId}`);
       return res.status(404).json({ message: "Resource not found." });
     }
 
@@ -103,8 +113,10 @@ export const likePost = async (req, res) => {
     }
 
     const updatedPost = await Post.findByIdAndUpdate(sanitizedId, { likes: post.likes }, { new: true });
+    logger.info(`Post ${sanitizedId} ${action} by User ID: ${sanitizedUserId}`);
     res.status(200).json(updatedPost);
   } catch (err) {
+    logger.error(`Error updating post: ${err.message}`);
     res.status(500).json({ message: "Failed to update post." });
   }
 };
