@@ -1,5 +1,5 @@
 import joi from 'joi';
-import logger from "../logger";
+import logger from "../utils/logger.js";
 
 
 const registerValidationSchema = joi.object({
