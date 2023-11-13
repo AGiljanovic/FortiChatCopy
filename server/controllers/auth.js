@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.js";
 import joi from 'joi';
 import sanitize from "mongo-sanitize";
-import logger from "../logger";
+import logger from "../utils/logger.js";
 
 /* 🖨️ Joi Validation Schemas 🖨️ */
 const registerSchema = joi.object({

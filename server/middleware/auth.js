@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import logger from "../logger";
+import logger from "../utils/logger.js";
 
 
 export const verifyToken = async (req, res, next) => {

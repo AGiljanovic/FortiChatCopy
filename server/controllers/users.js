@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import User from "../models/user.js";
 import sanitize from 'mongo-sanitize';
-import logger from "../logger";
+import logger from "../utils/logger.js";
 
 
 /* ✅ Checker for Valid MongoDB ObjectId ✅ */
