@@ -4,14 +4,32 @@
 </p>
 <p align="center">Welcome to <strong><em>FortiChat</em></strong>, where Conversations Forge Lasting Connections! 🚀 </p>
 
-<br><br><br>
-
+<br>
 
 <p align="center"> Developed with the MERN Stack:</p>
 <p align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/9/94/MERN-logo.png" width="40%" height="40%">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/9/94/MERN-logo.png" width="30%" height="30%">
 </p>
-<br><br><br>
+<br><br>
+
+## Table of Contents
+- [🌟 FortiChat - Social Media Platform 🌟](#-fortichat---social-media-platform-)
+- [Key Features 🌟](#key-features-)
+- [☢️ Systems Threat Model ☢️](#️-systems-threat-model-️)
+- [🌟 Mission Statement for FortiChat 🌟](#-mission-statement-for-fortichat-)
+- [🌍 Project Website Specifications for FortiChat 🌍](#-project-website-specifications-for-fortichat-)
+- [🛡️ Assets to Protect in FortiChat 🛡️](#️-assets-to-protect-in-fortichat-️)
+- [📊 Data Flow Chart 📊](#-data-flow-chart-)
+- [🦠 Threats to FortiChat 🦠](#-threats-to-fortichat-)
+- [🌍 Risk Assessment and Prioritization 🌍](#-risk-assessment-and-prioritization-)
+- [🚨 Plan for Incident Response 🚨](#-plan-for-incident-response-)
+- [⚔️ Cyber Security Measures ⚔️](#️-cyber-security-measures-️)
+- [🗃️ Database 🗃️](#️-database-️)
+- [🌟 FortiChat Use Cases 🌟](#-fortichat-use-cases-)
+- [✨ FortiChat Contribution List ✨](#-fortichat-contribution-list-)
+- [🚀 Installation & Setup Guide 🚀](#-installation--setup-guide-)
+
+
 
 ## Key Features 🌟
 
