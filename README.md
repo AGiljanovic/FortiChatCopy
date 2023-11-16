@@ -28,7 +28,6 @@
   <img src="https://cdn.discordapp.com/attachments/171681203794083840/1174680099472293888/360_F_455885719_m9RqZZvjC0s15boyn8op2l7HiPisK9QH.png?ex=65687918&is=65560418&hm=8790fd5829609854ffef3a06f348743f46c703780d1387f6c6fab13e6e2b209c&" width="60%" height="60%">
 </p>
 
-
 ## 🌟 Mission Statement for FortiChat 🌟
 
 ### Vision 🌐
@@ -217,6 +216,7 @@ flowchart LR
 <p align="center">
   <img src="https://cdn-icons-png.flaticon.com/512/6916/6916680.png" width="30%" height="30%">
 </p>
+
 FortiChat is built by taking the [OWASP API Security Top 10](https://owasp.org/API-Security/editions/2023/en/0x11-t10/) into careful consideration.
 
 ## API1: Broken Object Level Authorization 🛡️
@@ -270,8 +270,178 @@ FortiChat is built by taking the [OWASP API Security Top 10](https://owasp.org/A
 <br>
 
 # 🗃️ Database 🗃️
-WIP
+<p align="center">
+  <img src="https://cdn.discordapp.com/attachments/171681203794083840/1174693183184195654/preview.png?ex=65688547&is=65561047&hm=4b09cf4fbe8f97a49a2f7d588c2e79fd5cca9451b11bb26341b53465a95ee10b&" >
+</p>
+The backbone of this system is MongoDB, a popular NoSQL database known for its flexibility, scalability, and performance.
 
-<br><br>
-### Project Setup
-- wip
+## 🧐 Why MongoDB for a Social Media Platform? 🧐
+*"When you could also just use SQL?  (｡·  v  ·｡)? ..."*
+
+### 🛠 Dynamic & Adaptable Schema
+- **Why It Rocks:** In the ever-changing world of social media, nothing stays the same. With this idea in mind I chose MongoDB's because of its flexible schema which means FortiChat can easily evolve. *New features? Different post types? No problem!* 
+- **In Simple Words:** It's like having a backpack that magically expands to fit everything, no matter how much stuff you add. ᕙ(  •̀ ᗜ •́  )ᕗ
+
+### 🌌 Handling Diverse Data with Ease
+- **Why It's Awesome:** Posts, comments, images, likes - social media is a wild mix of data. MongoDB handles this variety effortlessly, letting FortiChat store and manage all sorts of content.
+- **Put Simply:** It’s like a wizard's hat that can hold anything from a rabbit to a bouquet of flowers - all at once! ₍ᐢ. .ᐢ₎ ₊˚⊹♡
+
+### 🚀 Scalability That Grows
+- **The Cool Factor:** As more users join FortiChat, MongoDB grows as well! It's built to handle tons of data and users without breaking a sweat.
+- **In Human Terms:** Imagine a party where everyone's invited, and the room magically gets bigger as more friends pile in. *ੈ✩‧₊˚
+
+### ⚡ Fast Development & Iteration
+- **Why We Love It:** I want to continue tinkering and improving FortiChat. MongoDB’s developer-friendly setup lets me roll out updates quickly.
+- **Plain Speak:** It's like cooking in a well-organized kitchen - everything you need is right there, making it a breeze to whip up something new. ‧₊˚ ⋅  𓐐𓎩 ‧₊˚ ⋅
+
+### 📡 Real-Time Data for Instant Connections
+- **The Wow Factor:** What’s social media without the 'social' part? MongoDB helps me deliver real-time updates and notifications, keeping the FortiChat community buzzing.
+- **In Everyday Words:** It's like having a conversation where replies come instantly - no awkward pauses or delays. ৻( •̀ ᗜ •́ ৻)
+
+### 🤔 So, Why Not SQL?
+- **Here's the Deal:** SQL is great, but it's like a well-oiled machine with fixed parts - not ideal for the spontaneity and fluidity of what I had an idea in mind for this project. I also wanted to further develop my NoSQL (specifically MongoDB) skills, but that was besides the point.
+- **Bottom Line:** I chose MongoDB because it's like a living, breathing organism that adapts and grows with the community. (๑ᵕ◡ᵕ)(ˆ◡ˆc)
+
+<br>
+
+## 🗺️ Diagram of the Data Model 🗺️
+
+<p align="center">
+  <img src="https://cdn.discordapp.com/attachments/171681203794083840/1174689801228779520/Blank_diagram_-_Page_1.png?ex=65688221&is=65560d21&hm=7cc36449382a51054523b3c890242175a1bb486f4cfdce02f2413bc5d5307d02&" width="60%" height="60%">
+</p>
+
+Modelled with [Lucidchart](https://lucid.app/)
+
+## 🌟 FortiChat Use Cases 🌟
+
+### 📝 User Registration
+- 🆕 Users can **create a new account** by providing their email, name, and password.
+- 🔒 The system **securely stores user credentials**, including hashed passwords.
+
+### 🔑 User Login
+- 👤 Users can **log in to the platform** using their email and password.
+- 🛡️ The system **authenticates users** and issues a JWT for session management.
+
+### 🖼️ Profile Management
+- 👀 Users can **view their profile information**, including names, location, occupation, and profile picture.
+- 📸 Users have the option to **upload a profile picture**, which is stored securely.
+
+### 👥 Friend System
+- 🤝 Users can **send friend requests** to other users.
+- 📈 The system **updates the friends list** upon accepting friend requests.
+
+### ✍️ Post Creation
+- 📝 Users can **create posts with text** and optionally include images.
+- 🤳 All posts are **associated with user details** and can have likes and comments.
+- ❗️ Users do not have an option to edit or delete posts, as it’s supposed to be a **diary-style social media**.
+
+### 📰 Feed Interaction
+- 📖 Users can **view a feed of posts** made by their friends and other connections.
+- 👍 Users can **like posts** in their feed.
+- 💬 Users can **comment on posts** in their feed → *To be implemented*
+
+### 🔍 Search Functionality → *WIP*
+- 🔎 Users can **search for other users** by name or email.
+- 📜 The system **retrieves and displays user profiles** matching the search criteria.
+
+<br>
+
+## ✨ FortiChat Contribution List ✨
+
+### Data Modeling 📊
+- Structured MongoDB collections for users, posts, and friendships.
+
+### Datastore Setup 🛠️
+- Configured MongoDB to store operational data with efficiency.
+
+### NoSQL Advantages 📈
+- Leveraged MongoDB for its schema flexibility and performance.
+
+### Query Optimization ⚡
+- Optimized queries and indexes for snappy data retrieval.
+
+### Backup Strategy 💾
+- Established backup procedures for disaster recovery with MongoDB.
+
+### Security Integration 🔐
+- Applied JWT and bcrypt for secure database interactions.
+
+### Middleware & Validation 🛡️
+- Created middleware for rate limiting and secure data validation.
+
+### Error Logging 🚨
+- Set up detailed logging for monitoring and operational insight.
+
+<br>
+
+# 🚀 Installation & Setup Guide 🚀
+<p align="center">
+  <img src="https://cdn-icons-png.flaticon.com/512/6348/6348248.png" width="20%" height="20%">
+</p>
+
+This guide will walk you through setting up and running the FortiChat project on your local machine. Before starting, ensure you have Node.js installed and a MongoDB instance ready for use.
+
+## Step 1: Install Node.js ⬇️
+Node.js is essential for running the JavaScript backend.
+- Download Node.js [here](https://nodejs.org/en/download).
+- For a quick start guide on Node.js, visit [Getting Started with Node.js](https://nodejs.org/en/docs/guides/getting-started-guide/).
+
+## Step 2: Clone the Repository 🧬
+```
+git clone https://github.com/AGiljanovic/FortiChat.git
+cd FortiChat
+```
+## Step 3: Install Dependencies 🚸
+- Install the required npm packages for both frontend and backend.
+- Navigate to the frontend and backend directories in separate terminal windows.
+- Run ```npm install``` in each directory to install the dependencies listed in package.json.
+- Frontend [packages](https://github.com/AGiljanovic/FortiChat/blob/main/client/package.json)
+- Backend [packages](https://github.com/AGiljanovic/FortiChat/blob/main/server/package.json)
+
+## Step 4: MongoDB Setup 🗄️
+To store and manage application data, set up a MongoDB instance. 
+- If you don't have MongoDB, download and install it from [MongoDB Official Site](https://www.mongodb.com/try/download/community).
+- For guidance on setting up MongoDB, refer to [MongoDB Installation Guide.](https://www.mongodb.com/docs/manual/installation/).
+
+## Step 5: Configure .env File ⚙️
+- Create a .env file in the root of the backend directory and fill in the details:
+  
+```
+MONGO_URL = ""
+PORT = 3001
+JWT_SECRET = ""
+MONGO_DB_NAME = ""
+```
+- `MONGO_URL`: Your MongoDB connection string.
+- `PORT`: The port on which the backend server will run.
+- `JWT_SECRET`: A secret key for signing JWT tokens.
+- `MONGO_DB_NAME`: Name of your MongoDB database.
+
+## Step 6: Run the Application 🚩
+With the setup complete, you can now run the application:
+- In the backend directory, run `node index.js` to start the backend server.
+- In the frontend directory, run `npm start client` to launch the React application.
+
+## Populate the Database with Initial Data ➕
+- To have some initial data in the application, you can populate your database with predefined users and posts. This step is optional but recommended for a better initial experience with FortiChat.
+- In the `index.js` file of the backend directory, uncomment the following lines:
+```
+// Import models and initial data
+import User from "./models/user.js";
+import Post from "./models/post.js";
+import { users, posts } from "./data/index.js";
+
+// Add data to the database (Run this only once to avoid duplicates)
+User.insertMany(users);
+Post.insertMany(posts);
+```
+- Save the changes and run your backend server. This will insert the initial users and posts into your MongoDB database.
+- **Important:** Once the data is successfully added, comment out these lines again to prevent duplicate entries if you restart the server.
+```
+// Prevent duplicate data insertion
+// User.insertMany(users);
+// Post.insertMany(posts);
+```
+- Restart your backend server to continue with the normal operation of the application.
+<br>
+Now, your FortiChat application should have some preloaded data to interact with! ٩(ˊᗜˋ*)و ♡
