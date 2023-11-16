@@ -17,6 +17,8 @@
   import { apiRateLimiter } from "./middleware/rateLimiter.js";
   import { validatePostCreation, validateRegistrationData } from "./middleware/validation.js";
   import logger from "./utils/logger.js";
+  import AWS from 'aws-sdk';
+  import multerS3 from 'multer-s3';
   // import User from "./models/user.js";
   // import Post from "./models/post.js";
   // import { users, posts } from "./data/index.js";
@@ -45,16 +47,26 @@
   app.use(cors());
   app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
-  /* FILE STORAGE */
-  const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, "public/assets");
-    },
-    filename: function (req, file, cb) {
-      cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname);
-    },
+  /* Configure AWS */
+  AWS.config.update({
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    region: process.env.AWS_REGION
   });
-  const upload = multer({ storage });
+
+  const s3 = new AWS.S3();
+
+/* FILE STORAGE with multerS3 */
+const upload = multer({
+  storage: multerS3({
+    s3,
+    bucket: process.env.AWS_BUCKET_NAME,
+    acl: 'public-read',
+    key: function (req, file, cb) {
+      cb(null, Date.now().toString() + '-' + file.originalname);
+    }
+  })
+});
 
   /* ROUTES WITH FILES */
   app.post("/auth/register", upload.single("picture"), apiRateLimiter, validateRegistrationData, register);
