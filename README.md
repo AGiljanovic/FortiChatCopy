@@ -1,4 +1,4 @@
-# 🌟 FortiChat - Social Media Platform 🌟
+# 🌟 FortiChat Deployed - The Deployed Copy of the Social Media Platform 🌟
 <p align="center">
   <img src="https://cdn.discordapp.com/attachments/171681203794083840/1173721887784833024/fd88084a-5132-4973-b552-962298ea2fb5.png" width="20%" height="20%">
 </p>
@@ -6,6 +6,13 @@
 
 <br>
 
+<p align="center">
+  🌐 <b>Experience FortiChat Live!</b> 🌟 <br>
+  <a href="https://fortichat.onrender.com/">🔗 Visit FortiChat</a>
+</p>
+
+<br>
+<p align="center"> This repository is a deployed copy of the original <a href="https://github.com/AGiljanovic/FortiChat">🔗 FortiChat</a></p> <br>
 <p align="center"> Developed with the MERN Stack:</p>
 <p align="center">
   <img src="https://upload.wikimedia.org/wikipedia/commons/9/94/MERN-logo.png" width="30%" height="30%">
@@ -40,6 +47,61 @@
 | **Posts and Interactions** 💬 | Share thoughts, images, and like other users' posts. |
 | **Responsive Design** 📱 | Seamlessly adaptable to various devices, enhancing user accessibility. |
 <br>
+
+# ☁️ Cloud
+
+<p align="center">
+  <img src="https://cdn-icons-png.flaticon.com/512/4834/4834559.png" width="20%" height="20%">
+</p>
+
+## 🏛️ Architecture Visualization 🏛️
+
+Here's a high-level diagram illustrating how various components interact:
+<p align="center">
+  <img src="https://cdn.discordapp.com/attachments/171681203794083840/1175033483211575436/Screenshot_2023-11-17_at_12.23.21.png?ex=6569c235&is=65574d35&hm=1499d176555df74303871a79a85a80a6b133ec2ecf4f9f501d8ee9767e6a6e0f&" width="80%" height="80%">
+</p>
+
+### Key Components:
+- **Frontend 🖥️**: Hosted as a static site, serving the React application.
+- **Backend ⚙️**: A Node.js server, handling API requests and connecting to MongoDB.
+- **Database 🗄️**: MongoDB, stores and manages all application data.
+- **File Storage 🗃️**: AWS S3 buckets used for scalable and secure storage of images and files.
+
+## ☁️ Cloud Setup and Deployment ☁️
+
+I chose Render.com for our cloud hosting due to its simplicity, performance, and scalability. Here's how to set up and deploy FortiChat, if you wish to do it yourself:
+
+### 🪂 Deployment Process
+- **Frontend Deployment**: The React app is deployed as a static site, ensuring fast load times and optimal performance.
+  - Change the root directory to client
+  - Set the build command to `npm run build`
+  - Set the publish directory as `build`
+  - Add the following `environment` variables: `REACT_APP_API_BASE_URL` and `REACT_APP_S3_BUCKET_URL`
+  - Create the static website ✍🏼
+- **Backend Deployment**: The Node.js server is deployed as a web service, with auto-scaling capabilities to handle varying loads.
+  - Change the root directory to server
+  - Set the build command to `npm install`
+  - Set the start command to `node index.js`
+  - Add the following `environment` variables: `MONGO_URL`, `PORT`, `JWT_SECRET`, `MONGO_DB_NAME`, `AWS_SECRET_ACCESS_KEY`, `AWS_ACCESS_KEY_ID`, `AWS_REGION`, `AWS_BUCKET_NAME`
+  - Create the web service ✍🏼
+
+### 🔡 Environment Management
+- **Environment Variables**: Securely managed on Render.com, containing sensitive information like database URIs and API keys.
+- **Configuration**: Easily update and manage configurations without modifying the codebase.
+
+### 📶 Scalability and Performance
+- **Auto-scaling**: The backend can scale automatically based on traffic, ensuring smooth performance during peak times.
+- **Load Balancing**: Render.com handles load balancing, distributing traffic to keep the app running smoothly.
+
+## 📈 Monitoring and Logging
+- **Logging**: Implemented using Winston and Morgan for detailed and comprehensive logging.
+
+## 🔒 Security Practices
+- **Data Encryption**: All data in transit and at rest is encrypted.
+- **Firewalls and Access Controls**: Strict access controls and firewalls protect our services from unauthorized access.
+
+<br>
+
 
 # ☢️ Systems Threat Model ☢️
 <p align="center">
