@@ -22,6 +22,7 @@
 ## Table of Contents
 - [🌟 FortiChat - Social Media Platform 🌟](#-fortichat---social-media-platform-)
 - [Key Features 🌟](#key-features-)
+- [☁️ Cloud ☁️](#️-cloud-️)
 - [☢️ Systems Threat Model ☢️](#️-systems-threat-model-️)
 - [🌟 Mission Statement for FortiChat 🌟](#-mission-statement-for-fortichat-)
 - [🌍 Project Website Specifications for FortiChat 🌍](#-project-website-specifications-for-fortichat-)
@@ -48,7 +49,7 @@
 | **Responsive Design** 📱 | Seamlessly adaptable to various devices, enhancing user accessibility. |
 <br>
 
-# ☁️ Cloud
+# ☁️ Cloud ☁️
 
 <p align="center">
   <img src="https://cdn-icons-png.flaticon.com/512/4834/4834559.png" width="20%" height="20%">
