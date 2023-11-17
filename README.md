@@ -54,6 +54,18 @@
   <img src="https://cdn-icons-png.flaticon.com/512/4834/4834559.png" width="20%" height="20%">
 </p>
 
+## 🚀 Deployed Website Images 🚀
+- Login Page
+<p align="center">
+  <img src="https://cdn.discordapp.com/attachments/171681203794083840/1175041904111525888/deploy1.png?ex=6569ca0d&is=6557550d&hm=bd30a0090ad5d62f01752937664e161a41c60f54e404b47859f9bfff6e32a674&" width="80%" height="80%">
+</p>
+
+- Home Screen
+<p align="center">
+  <img src="https://cdn.discordapp.com/attachments/171681203794083840/1175041904795189328/deploy2.png?ex=6569ca0d&is=6557550d&hm=5218e7b6bc8ac1eb25f8b14dbb8bc037f7263921df2b04c7b3646deff0776f8e&" width="80%" height="80%">
+</p>
+<br>
+
 ## 🏛️ Architecture Visualization 🏛️
 
 Here's a high-level diagram illustrating how various components interact:
